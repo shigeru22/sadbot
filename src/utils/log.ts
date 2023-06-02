@@ -1,6 +1,8 @@
 // Copyright (c) shigeru22. Licensed under the MIT license.
 // See LICENSE in the repository root for details.
 
+/* eslint-disable no-restricted-syntax */
+
 import chalk from "chalk";
 import { DateUtils } from "./date.js";
 import { Environment, NodeEnvironment } from "./env.js";
