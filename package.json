@@ -4,7 +4,7 @@
   "description": "",
   "exports": "./dist/index.js",
   "scripts": {
-    "start": "node .",
+    "start": "node ./dist/index.js",
     "dev": "nodemon --signal SIGINT --delay 3 --exec ts-node-esm ./src/index.ts",
     "build": "tsc",
     "test": "echo \"Error: no test specified\" && exit 1"

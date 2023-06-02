@@ -51,7 +51,7 @@ module.exports = {
       "ignoreImports": false,
       "ignoreGlobals": false
     }],
-    "class-methods-use-this": ["error", {
+    "class-methods-use-this": ["off", {
       "exceptMethods": [],
       "enforceForClassFields": true
     }],
@@ -62,7 +62,7 @@ module.exports = {
     "default-case-last": "error",
     "dot-notation": "warn",
     "eqeqeq": "warn",
-    "max-classes-per-file": ["error", {
+    "max-classes-per-file": ["off", {
       "max": 1,
       "ignoreExpressions": false
     }],

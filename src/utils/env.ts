@@ -1,6 +1,7 @@
 // Copyright (c) shigeru22. Licensed under the MIT license.
 // See LICENSE in the repository root for details.
 
+import { EnvironmentError } from "../errors/util-error.js";
 import { LogSeverity } from "./log.js";
 
 export enum NodeEnvironment {
@@ -31,6 +32,14 @@ export class Environment {
     }
 
     return this.nodeEnv;
+  }
+
+  public static getBotToken(): string {
+    if(process.env.SB_BOT_TOKEN === undefined || process.env.SB_BOT_TOKEN === "") {
+      throw new EnvironmentError("SB_BOT_TOKEN", "SB_BOT_TOKEN is not defined in environment variables.");
+    }
+
+    return process.env.SB_BOT_TOKEN;
   }
 
   public static getShouldUseUtc(): boolean {

@@ -35,7 +35,7 @@ export class Log {
         break;
       case LogSeverity.VERBOSE: // fallthrough
       case LogSeverity.DEBUG:
-        console.debug(chalk.gray(logText));
+        console.log(chalk.gray(logText));
         break;
     }
   }
