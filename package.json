@@ -4,8 +4,16 @@
   "description": "",
   "main": "dist/index.js",
   "scripts": {
+    "start": "node .",
+    "dev": "nodemon --signal SIGINT --delay 3 ./src/index.ts",
+    "build": "tsc",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "shigeru22",
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "nodemon": "^2.0.22",
+    "ts-node": "^10.9.1",
+    "typescript": "^5.1.3"
+  }
 }
