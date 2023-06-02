@@ -1,8 +1,11 @@
 // Copyright (c) shigeru22. Licensed under the MIT license.
 // See LICENSE in the repository root for details.
 
-function outputConsole(message: string) {
-  console.log(message);
-}
+import DotEnv from "dotenv";
+import { Environment } from "./utils/env";
 
-outputConsole("Hello, world!");
+DotEnv.config({
+  debug: process.env.NODE_ENV === "development" || process.env.NODE_ENV === "staging"
+});
+
+console.log(Environment.getEnvironment());
