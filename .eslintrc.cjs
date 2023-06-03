@@ -181,6 +181,9 @@ module.exports = {
     "header/header": ["warn", "line", [" Copyright (c) shigeru22. Licensed under the MIT license.", " See LICENSE in the repository root for details."], 2],
 
     /* typescript-eslint/eslint-plugin */
-    "@typescript-eslint/explicit-module-boundary-types": "off"
+    "@typescript-eslint/explicit-module-boundary-types": "off",
+    "@typescript-eslint/no-unused-vars": ["warn", {
+      "argsIgnorePattern": "^_"
+    }]
   }
 };
