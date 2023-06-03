@@ -1,7 +1,8 @@
 // Copyright (c) shigeru22. Licensed under the MIT license.
 // See LICENSE in the repository root for details.
 
-import { Client, GatewayIntentBits } from "discord.js";
+import { Client, GatewayIntentBits, Events } from "discord.js";
+import { Handler } from "./handler.js";
 import { Log } from "./utils/log.js";
 
 export class BotClient {
@@ -22,7 +23,10 @@ export class BotClient {
     process.on("SIGINT", () => this.onExit());
     process.on("SIGTERM", () => this.onExit());
 
-    this.client.on("ready", () => this.onReady());
+    this.client.on(Events.ClientReady, this.onReady);
+    this.client.on(Events.GuildCreate, Handler.onJoinGuild);
+    this.client.on(Events.MessageCreate, Handler.onNewMessage);
+    this.client.on(Events.InteractionCreate, Handler.onInvokeInteraction);
 
     Log.writeVerbose("BotClient", "Client initialized.");
   }
@@ -32,7 +36,7 @@ export class BotClient {
     await this.client.login(this.botToken);
   }
 
-  private onReady() {
+  private onReady(_: Client) {
     Log.writeInfo("onReady", "Bot client started.");
   }
 
