@@ -7,6 +7,16 @@ using System.Runtime.CompilerServices;
 
 namespace SadBot.Utils;
 
+public enum LogSeverity
+{
+	Critical = 0,
+	Error,
+	Warning,
+	Info,
+	Verbose,
+	Debug
+}
+
 public static class Log
 {
 	private static readonly string[] logSeverityString = {
