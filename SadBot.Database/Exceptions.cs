@@ -29,3 +29,42 @@ public class DatabaseParameterException : DatabaseException
 		Parameter = parameter;
 	}
 }
+
+public class DatabaseInstanceException : DatabaseException
+{
+	public string Query { get; init; }
+
+	public DatabaseInstanceException(string query) : base("Database instance exception occurred while executing query.")
+	{
+		Query = query;
+	}
+
+	public DatabaseInstanceException(string query, string message) : base(message)
+	{
+		Query = query;
+	}
+}
+
+public class DuplicateRecordException : DatabaseException
+{
+	public string TableName { get; init; }
+	public string ColumnName { get; init; }
+	public string ParameterData { get; init; }
+	public ulong DuplicatesFound { get; init; }
+
+	public DuplicateRecordException(string tableName, string columnName, string parameterData, ulong duplicatesFound) : base($"Duplicated data found ({tableName} table, {columnName} = {parameterData}).")
+	{
+		TableName = tableName;
+		ColumnName = columnName;
+		ParameterData = parameterData;
+		DuplicatesFound = duplicatesFound;
+	}
+
+	public DuplicateRecordException(string tableName, string columnName, string parameterData, ulong duplicatesFound, string message) : base(message)
+	{
+		TableName = tableName;
+		ColumnName = columnName;
+		ParameterData = parameterData;
+		DuplicatesFound = duplicatesFound;
+	}
+}
