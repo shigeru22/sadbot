@@ -12,6 +12,7 @@ public struct GuildsTableData
 	public int GuildID { get; set; }
 	public string DiscordID { get; set; }
 	public string GuildName { get; set; }
+	public DateTime CreationDate { get; set; } // set as UTC
 	public DateTime LastUpdate { get; set; } // set as UTC
 }
 
@@ -24,6 +25,7 @@ public static class Guilds
 				guilds.""guild_id"",
 				guilds.""discord_id"",
 				guilds.""guild_name"",
+				guilds.""creation_date"",
 				guilds.""last_update""
 			FROM
 				guilds
@@ -46,7 +48,8 @@ public static class Guilds
 				GuildID = dbReader.GetInt32(0),
 				DiscordID = dbReader.GetString(1),
 				GuildName = dbReader.GetString(2),
-				LastUpdate = dbReader.GetDateTime(3)
+				CreationDate = dbReader.GetDateTime(3),
+				LastUpdate = dbReader.GetDateTime(4)
 			});
 		}
 
@@ -61,6 +64,7 @@ public static class Guilds
 				guilds.""guild_id"",
 				guilds.""discord_id"",
 				guilds.""guild_name"",
+				guilds.""creation_date"",
 				guilds.""last_update""
 			FROM
 				guilds
@@ -95,7 +99,8 @@ public static class Guilds
 			GuildID = dbReader.GetInt32(0),
 			DiscordID = dbReader.GetString(1),
 			GuildName = dbReader.GetString(2),
-			LastUpdate = dbReader.GetDateTime(3)
+			CreationDate = dbReader.GetDateTime(3),
+			LastUpdate = dbReader.GetDateTime(4)
 		};
 
 		Log.WriteVerbose("guilds: Returned 1 row.");
@@ -109,6 +114,7 @@ public static class Guilds
 				guilds.""guild_id"",
 				guilds.""discord_id"",
 				guilds.""guild_name"",
+				guilds.""creation_date"",
 				guilds.""last_update""
 			FROM
 				guilds
@@ -143,7 +149,8 @@ public static class Guilds
 			GuildID = dbReader.GetInt32(0),
 			DiscordID = dbReader.GetString(1),
 			GuildName = dbReader.GetString(2),
-			LastUpdate = dbReader.GetDateTime(3)
+			CreationDate = dbReader.GetDateTime(3),
+			LastUpdate = dbReader.GetDateTime(4)
 		};
 
 		Log.WriteVerbose("guilds: Returned 1 row.");
@@ -205,13 +212,14 @@ public static class Guilds
 		Log.WriteVerbose("guilds: Inserted 1 row.");
 	}
 
-	public static async Task InsertGuildAsync(DatabaseTransaction transaction, string guildDiscordId, string guildName, DateTime lastUpdate)
+	public static async Task InsertGuildAsync(DatabaseTransaction transaction, string guildDiscordId, string guildName, DateTime creationDate, DateTime lastUpdate)
 	{
 		const string query = @"
-			INSERT INTO guilds (discord_id, guild_name, last_update)
-				VALUES ($1, $2, $3)
+			INSERT INTO guilds (discord_id, guild_name, creation_date, last_update)
+				VALUES ($1, $2, $3, $4)
 		";
 
+		DateTime tempUtcCreationDate = creationDate.ToUniversalTime();
 		DateTime tempUtcLastUpdate = lastUpdate.ToUniversalTime();
 
 		await using NpgsqlCommand dbCommand = new NpgsqlCommand(query, transaction.Connection, transaction.Transaction)
@@ -220,6 +228,7 @@ public static class Guilds
 			{
 				new NpgsqlParameter() { Value = guildDiscordId },
 				new NpgsqlParameter() { Value = guildName },
+				new NpgsqlParameter() { Value = tempUtcCreationDate },
 				new NpgsqlParameter() { Value = tempUtcLastUpdate }
 			}
 		};
@@ -235,13 +244,14 @@ public static class Guilds
 		Log.WriteVerbose("guilds: Inserted 1 row.");
 	}
 
-	public static async Task InsertGuildAsync(DatabaseTransaction transaction, string guildDiscordId, string guildName, DateTime lastUpdate, int guildId)
+	public static async Task InsertGuildAsync(DatabaseTransaction transaction, string guildDiscordId, string guildName, DateTime creationDate, DateTime lastUpdate, int guildId)
 	{
 		const string query = @"
-			INSERT INTO guilds (guild_id, discord_id, guild_name, last_update)
-				VALUES ($1, $2, $3, $4)
+			INSERT INTO guilds (guild_id, discord_id, guild_name, creation_date, last_update)
+				VALUES ($1, $2, $3, $4, $5)
 		";
 
+		DateTime tempUtcCreationDate = creationDate.ToUniversalTime();
 		DateTime tempUtcLastUpdate = lastUpdate.ToUniversalTime();
 
 		await using NpgsqlCommand dbCommand = new NpgsqlCommand(query, transaction.Connection, transaction.Transaction)
@@ -251,6 +261,7 @@ public static class Guilds
 				new NpgsqlParameter() { Value = guildId },
 				new NpgsqlParameter() { Value = guildDiscordId },
 				new NpgsqlParameter() { Value = guildName },
+				new NpgsqlParameter() { Value = tempUtcCreationDate },
 				new NpgsqlParameter() { Value = tempUtcLastUpdate }
 			}
 		};
@@ -270,7 +281,7 @@ public static class Guilds
 	{
 		const string query = @"
 			UPDATE guilds
-			SET guild_name = ($1), last_update = (NOW() AS TIME ZONE 'UTC')
+			SET guild_name = ($1), last_update = (NOW() AT TIME ZONE 'UTC')
 			WHERE guild_id = ($2)
 		";
 
@@ -298,7 +309,7 @@ public static class Guilds
 	{
 		const string query = @"
 			UPDATE guilds
-			SET guild_name = ($1), last_update = (NOW() AS TIME ZONE 'UTC')
+			SET guild_name = ($1), last_update = (NOW() AT TIME ZONE 'UTC')
 			WHERE discord_id = ($2)
 		";
 
@@ -381,6 +392,7 @@ public static class Guilds
 				guild_id SERIAL PRIMARY KEY,
 				discord_id VARCHAR(255),
 				guild_name VARCHAR(255),
+				creation_date TIMESTAMP NOT NULL DEFAULT (NOW() AT TIME ZONE 'UTC'),
 				last_update TIMESTAMP NOT NULL DEFAULT (NOW() AT TIME ZONE 'UTC')
 			)
 		";

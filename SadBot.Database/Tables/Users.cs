@@ -13,6 +13,7 @@ public struct UsersTableData
 	public string DiscordID { get; set; }
 	public string Username { get; set; }
 	public string Discriminator { get; set; }
+	public DateTime CreationDate { get; set; } // save as UTC
 	public DateTime LastUpdate { get; set; } // save as UTC
 }
 
@@ -26,6 +27,7 @@ public static class Users
 				users.""discord_id"",
 				users.""username"",
 				users.""discriminator"",
+				users.""creation_date"",
 				users.""last_update""
 			FROM
 				users
@@ -49,7 +51,8 @@ public static class Users
 				DiscordID = dbReader.GetString(1),
 				Username = dbReader.GetString(2),
 				Discriminator = dbReader.GetString(3),
-				LastUpdate = dbReader.GetDateTime(4)
+				CreationDate = dbReader.GetDateTime(4),
+				LastUpdate = dbReader.GetDateTime(5)
 			});
 		}
 
@@ -65,6 +68,7 @@ public static class Users
 				users.""discord_id"",
 				users.""username"",
 				users.""discriminator"",
+				users.""creation_date"",
 				users.""last_update""
 			FROM
 				users
@@ -100,7 +104,8 @@ public static class Users
 			DiscordID = dbReader.GetString(1),
 			Username = dbReader.GetString(2),
 			Discriminator = dbReader.GetString(3),
-			LastUpdate = dbReader.GetDateTime(4)
+			CreationDate = dbReader.GetDateTime(4),
+			LastUpdate = dbReader.GetDateTime(5)
 		};
 
 		Log.WriteVerbose("users: Returned 1 row.");
@@ -115,6 +120,7 @@ public static class Users
 				users.""discord_id"",
 				users.""username"",
 				users.""discriminator"",
+				users.""creation_date"",
 				users.""last_update""
 			FROM
 				users
@@ -150,7 +156,8 @@ public static class Users
 			DiscordID = dbReader.GetString(1),
 			Username = dbReader.GetString(2),
 			Discriminator = dbReader.GetString(3),
-			LastUpdate = dbReader.GetDateTime(4)
+			CreationDate = dbReader.GetDateTime(4),
+			LastUpdate = dbReader.GetDateTime(5)
 		};
 
 		Log.WriteVerbose("users: Returned 1 row.");
@@ -214,13 +221,14 @@ public static class Users
 		Log.WriteVerbose("users: Inserted 1 row.");
 	}
 
-	public static async Task InsertUserAsync(DatabaseTransaction transaction, string userDiscordId, string username, string discriminator, DateTime lastUpdate)
+	public static async Task InsertUserAsync(DatabaseTransaction transaction, string userDiscordId, string username, string discriminator, DateTime lastUpdate, DateTime creationDate)
 	{
 		const string query = @"
-			INSERT INTO	users (discord_id, username, discrimintator, last_update)
-				VALUES ($1, $2, $3, $4)
+			INSERT INTO	users (discord_id, username, discrimintator, creation_date, last_update)
+				VALUES ($1, $2, $3, $4, $5)
 		";
 
+		DateTime tempUtcCreationDate = creationDate.ToUniversalTime();
 		DateTime tempUtcLastUpdate = lastUpdate.ToUniversalTime();
 
 		await using NpgsqlCommand dbCommand = new NpgsqlCommand(query, transaction.Connection, transaction.Transaction)
@@ -230,6 +238,7 @@ public static class Users
 				new NpgsqlParameter() { Value = userDiscordId },
 				new NpgsqlParameter() { Value = username },
 				new NpgsqlParameter() { Value = discriminator },
+				new NpgsqlParameter() { Value = tempUtcCreationDate },
 				new NpgsqlParameter() { Value = tempUtcLastUpdate }
 			}
 		};
@@ -245,13 +254,14 @@ public static class Users
 		Log.WriteVerbose("users: Inserted 1 row.");
 	}
 
-	public static async Task InsertUserAsync(DatabaseTransaction transaction, string userDiscordId, string username, string discriminator, DateTime lastUpdate, int userId)
+	public static async Task InsertUserAsync(DatabaseTransaction transaction, string userDiscordId, string username, string discriminator, DateTime lastUpdate, DateTime creationDate, int userId)
 	{
 		const string query = @"
-			INSERT INTO	users (discord_id, username, discrimintator, last_update)
+			INSERT INTO	users (discord_id, username, discrimintator, creation_date, last_update)
 				VALUES ($1, $2, $3, $4, $5)
 		";
 
+		DateTime tempUtcCreationDate = creationDate.ToUniversalTime();
 		DateTime tempUtcLastUpdate = lastUpdate.ToUniversalTime();
 
 		await using NpgsqlCommand dbCommand = new NpgsqlCommand(query, transaction.Connection, transaction.Transaction)
@@ -262,6 +272,7 @@ public static class Users
 				new NpgsqlParameter() { Value = userDiscordId },
 				new NpgsqlParameter() { Value = username },
 				new NpgsqlParameter() { Value = discriminator },
+				new NpgsqlParameter() { Value = tempUtcCreationDate },
 				new NpgsqlParameter() { Value = tempUtcLastUpdate }
 			}
 		};
@@ -281,7 +292,7 @@ public static class Users
 	{
 		const string query = @"
 			UPDATE users
-			SET username = ($1), discriminator = ($2), last_update = (NOW() AS TIME ZONE 'UTC')
+			SET username = ($1), discriminator = ($2), last_update = (NOW() AT TIME ZONE 'UTC')
 			WHERE user_id = ($3)
 		";
 
@@ -310,7 +321,7 @@ public static class Users
 	{
 		const string query = @"
 			UPDATE users
-			SET username = ($1), discriminator = ($2), last_update = (NOW() AS TIME ZONE 'UTC')
+			SET username = ($1), discriminator = ($2), last_update = (NOW() AT TIME ZONE 'UTC')
 			WHERE discord_id = ($3)
 		";
 
@@ -395,6 +406,7 @@ public static class Users
 				discord_id VARCHAR(255),
 				username VARCHAR(255),
 				discriminator VARCHAR(4),
+				creation_date TIMESTAMP NOT NULL DEFAULT (NOW() AT TIME ZONE 'UTC'),
 				last_update TIMESTAMP NOT NULL DEFAULT (NOW() AT TIME ZONE 'UTC')
 			)
 		";
