@@ -30,7 +30,7 @@ public enum DiffName
 public static class Difficulties
 {
 	private static readonly string[] dbDiffNames = { "Easy", "Basic", "Advanced", "Expert", "Master", "Re:Master" };
-	private static readonly string[] dbDiffShortNames = { "EAS", "BAS", "ADV", "EXP", "MAS", "RMS" };
+	private static readonly string[] dbDiffShortNames = { "EAS", "BAS", "ADV", "EXP", "MAS", "Re:MAS" };
 
 	public static async Task<DifficultiesTableData[]> GetAllDifficultiesAsync(DatabaseTransaction transaction)
 	{
@@ -432,13 +432,13 @@ public static class Difficulties
 		Log.WriteVerbose("diffs: Deleted 1 row.");
 	}
 
-	public static async Task CreateGuildsTable(DatabaseTransaction transaction)
+	public static async Task CreateDifficultiesTable(DatabaseTransaction transaction)
 	{
 		const string query = @"
 			CREATE TABLE diffs (
 				diff_id SERIAL PRIMARY KEY,
 				diff_name VARCHAR(255),
-				diff_short_name VARCHAR(3),
+				diff_short_name VARCHAR(6),
 				color VARCHAR(6),
 				creation_date TIMESTAMP NOT NULL DEFAULT (NOW() AT TIME ZONE 'UTC'),
 				last_update TIMESTAMP NOT NULL DEFAULT (NOW() AT TIME ZONE 'UTC')
