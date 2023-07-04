@@ -72,7 +72,7 @@ public static class Charts
 
 		if (!dbReader.HasRows)
 		{
-			Log.WriteVerbose("maimai_versions: Returned 0 rows.");
+			Log.WriteVerbose("charts: Returned 0 rows.");
 			return Array.Empty<ChartsTableData>();
 		}
 
@@ -141,7 +141,7 @@ public static class Charts
 
 		if (!dbReader.HasRows)
 		{
-			Log.WriteVerbose("maimai_versions: Returned 0 rows.");
+			Log.WriteVerbose("charts: Returned 0 rows.");
 			return Array.Empty<ChartsTableData>();
 		}
 
@@ -210,7 +210,7 @@ public static class Charts
 
 		if (!dbReader.HasRows)
 		{
-			Log.WriteVerbose("maimai_versions: Returned 0 rows.");
+			Log.WriteVerbose("charts: Returned 0 rows.");
 			return Array.Empty<ChartsTableData>();
 		}
 
