@@ -293,7 +293,7 @@ public static class MaimaiVersions
 	{
 		const string query = @"
 			UPDATE maimai_versions
-			SET version_name = ($1), is_deluxe = ($2), launch_date = ($3), launch_date_global = ($4)
+			SET version_name = ($1), is_deluxe = ($2), launch_date = ($3), launch_date_global = ($4), last_update = (NOW() AT TIME ZONE 'UTC')
 			WHERE version_id = ($5)
 		";
 

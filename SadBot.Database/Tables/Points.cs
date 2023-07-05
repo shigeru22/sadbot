@@ -393,7 +393,7 @@ public static class Points
 	{
 		const string query = @"
 			UPDATE points
-			SET points = ($1)
+			SET points = ($1), last_update = (NOW() AT TIME ZONE 'UTC')
 			WHERE point_id = ($2)
 		";
 

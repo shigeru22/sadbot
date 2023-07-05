@@ -470,7 +470,7 @@ public static class Submissions
 	{
 		const string query = @"
 			UPDATE submissions
-			SET achievement = ($1)
+			SET achievement = ($1), last_update = (NOW() AT TIME ZONE 'UTC')
 			WHERE submission_id = ($2)
 		";
 
