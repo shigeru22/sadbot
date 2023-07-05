@@ -1,0 +1,17 @@
+{
+  "botToken": "test1234",
+  "useReply": false,
+  "logging": {
+    "useUtc": false,
+    "logSeverity": 4
+  },
+  "database": {
+    "hostname": "localhost",
+    "port": 5432,
+    "username": "testuser",
+    "password": "a1b2c3d4",
+    "name": "sb_bot",
+    "certPath": null,
+    "sslMode": null
+  }
+}
