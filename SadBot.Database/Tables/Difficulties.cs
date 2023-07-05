@@ -69,7 +69,7 @@ public static class Difficulties
 			});
 		}
 
-		Log.WriteVerbose($"guilds: Returned {ret.Count} row{(ret.Count == 1 ? string.Empty : "s")}.");
+		Log.WriteVerbose($"diffs: Returned {ret.Count} row{(ret.Count == 1 ? string.Empty : "s")}.");
 		return ret.ToArray();
 	}
 

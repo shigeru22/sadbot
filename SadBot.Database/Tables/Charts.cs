@@ -327,7 +327,7 @@ public static class Charts
 			throw new DatabaseInstanceException(dbCommand.CommandText, "Insertion query failed.");
 		}
 
-		Log.WriteVerbose("diffs: Inserted 1 row.");
+		Log.WriteVerbose("charts: Inserted 1 row.");
 	}
 
 	public static async Task InsertChartAsync(DatabaseTransaction transaction, int guildId, int diffId, int versionId, string artist, string title, string albumArtUrl, int level, bool isLevelPlus, decimal levelPrecise, int chartId)
@@ -362,7 +362,7 @@ public static class Charts
 			throw new DatabaseInstanceException(dbCommand.CommandText, "Insertion query failed.");
 		}
 
-		Log.WriteVerbose("diffs: Inserted 1 row.");
+		Log.WriteVerbose("charts: Inserted 1 row.");
 	}
 
 	public static async Task InsertChartAsync(DatabaseTransaction transaction, int guildId, int diffId, int versionId, string artist, string title, string albumArtUrl, int level, bool isLevelPlus, decimal levelPrecise, DateTime creationDate, DateTime lastUpdate)
@@ -401,7 +401,7 @@ public static class Charts
 			throw new DatabaseInstanceException(dbCommand.CommandText, "Insertion query failed.");
 		}
 
-		Log.WriteVerbose("diffs: Inserted 1 row.");
+		Log.WriteVerbose("charts: Inserted 1 row.");
 	}
 
 	public static async Task InsertChartAsync(DatabaseTransaction transaction, int guildId, int diffId, int versionId, string artist, string title, string albumArtUrl, int level, bool isLevelPlus, decimal levelPrecise, DateTime creationDate, DateTime lastUpdate, int chartId)
@@ -441,7 +441,7 @@ public static class Charts
 			throw new DatabaseInstanceException(dbCommand.CommandText, "Insertion query failed.");
 		}
 
-		Log.WriteVerbose("diffs: Inserted 1 row.");
+		Log.WriteVerbose("charts: Inserted 1 row.");
 	}
 
 	public static async Task UpdateChartAsync(DatabaseTransaction transaction, int chartId, int guildId, int diffId, int versionId, string artist, string title, string albumArtUrl, int level, bool isLevelPlus, bool levelPrecise)
@@ -479,7 +479,7 @@ public static class Charts
 			throw new DatabaseInstanceException(dbCommand.CommandText, "Update query failed.");
 		}
 
-		Log.WriteVerbose("diffs: Inserted 1 row.");
+		Log.WriteVerbose("charts: Updated 1 row.");
 	}
 
 	public static async Task DeleteChartAsync(DatabaseTransaction transaction, int chartId)
