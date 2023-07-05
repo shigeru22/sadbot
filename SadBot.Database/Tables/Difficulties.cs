@@ -58,15 +58,7 @@ public static class Difficulties
 		List<DifficultiesTableData> ret = new List<DifficultiesTableData>();
 		while (await dbReader.ReadAsync())
 		{
-			ret.Add(new DifficultiesTableData()
-			{
-				DiffID = dbReader.GetInt32(0),
-				DiffName = dbReader.GetString(1),
-				DiffShortName = dbReader.GetString(2),
-				Color = $"#{dbReader.GetString(3)}", // directly prepend '#' here
-				CreationDate = dbReader.GetDateTime(4),
-				LastUpdate = dbReader.GetDateTime(5)
-			});
+			ret.Add(GetRowData(dbReader));
 		}
 
 		Log.WriteVerbose($"diffs: Returned {ret.Count} row{(ret.Count == 1 ? string.Empty : "s")}.");
@@ -111,15 +103,7 @@ public static class Difficulties
 
 		_ = await dbReader.ReadAsync();
 
-		DifficultiesTableData ret = new DifficultiesTableData()
-		{
-			DiffID = dbReader.GetInt32(0),
-			DiffName = dbReader.GetString(1),
-			DiffShortName = dbReader.GetString(2),
-			Color = $"#{dbReader.GetString(3)}", // directly prepend '#' here
-			CreationDate = dbReader.GetDateTime(4),
-			LastUpdate = dbReader.GetDateTime(5)
-		};
+		DifficultiesTableData ret = GetRowData(dbReader);
 
 		Log.WriteVerbose("diffs: Returned 1 row.");
 		return ret;
@@ -165,15 +149,7 @@ public static class Difficulties
 
 		_ = await dbReader.ReadAsync();
 
-		DifficultiesTableData ret = new DifficultiesTableData()
-		{
-			DiffID = dbReader.GetInt32(0),
-			DiffName = dbReader.GetString(1),
-			DiffShortName = dbReader.GetString(2),
-			Color = $"#{dbReader.GetString(3)}", // directly prepend '#' here
-			CreationDate = dbReader.GetDateTime(4),
-			LastUpdate = dbReader.GetDateTime(5)
-		};
+		DifficultiesTableData ret = GetRowData(dbReader);
 
 		Log.WriteVerbose("diffs: Returned 1 row.");
 		return ret;
@@ -447,5 +423,25 @@ public static class Difficulties
 
 		await using NpgsqlCommand dbCommand = new NpgsqlCommand(query, transaction.Connection, transaction.Transaction);
 		_ = await dbCommand.ExecuteNonQueryAsync();
+	}
+
+	private static DifficultiesTableData GetRowData(NpgsqlDataReader dbReader)
+	{
+		int tempDiffID = dbReader.GetInt32(0);
+		string tempDiffName = dbReader.GetString(1);
+		string tempDiffShortName = dbReader.GetString(2);
+		string tempColor = $"#{dbReader.GetString(3)}"; // directly prepend '#' here
+		DateTime tempCreationDate = dbReader.GetDateTime(4);
+		DateTime tempLastUpdate = dbReader.GetDateTime(5);
+
+		return new DifficultiesTableData()
+		{
+			DiffID = tempDiffID,
+			DiffName = tempDiffName,
+			DiffShortName = tempDiffShortName,
+			Color = tempColor,
+			CreationDate = tempCreationDate,
+			LastUpdate = tempLastUpdate
+		};
 	}
 }

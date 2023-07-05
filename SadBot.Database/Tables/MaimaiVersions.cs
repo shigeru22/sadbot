@@ -49,32 +49,7 @@ public static class MaimaiVersions
 		List<MaimaiVersionsTableData> ret = new List<MaimaiVersionsTableData>();
 		while (await dbReader.ReadAsync())
 		{
-			int tempVersionId = dbReader.GetInt32(0);
-			string tempVersionName = dbReader.GetString(1);
-			bool tempIsDeluxe = dbReader.GetBoolean(2);
-			DateTime tempLaunchDate = dbReader.GetDateTime(3);
-			DateTime? tempLaunchDateGlobal = null;
-			try
-			{
-				tempLaunchDateGlobal = dbReader.GetDateTime(4);
-			}
-			catch (InvalidCastException)
-			{
-				// do nothing if null
-			}
-			DateTime tempCreationDate = dbReader.GetDateTime(5);
-			DateTime tempLastUpdate = dbReader.GetDateTime(6);
-
-			ret.Add(new MaimaiVersionsTableData()
-			{
-				VersionID = tempVersionId,
-				VersionName = tempVersionName,
-				IsDeluxe = tempIsDeluxe,
-				LaunchDate = tempLaunchDate,
-				LaunchDateGlobal = tempLaunchDateGlobal,
-				CreationDate = tempCreationDate,
-				LastUpdate = tempLastUpdate
-			});
+			ret.Add(GetRowData(dbReader));
 		}
 
 		Log.WriteVerbose($"maimai_versions: Returned {ret.Count} row{(ret.Count == 1 ? string.Empty : "s")}.");
@@ -120,32 +95,7 @@ public static class MaimaiVersions
 
 		_ = await dbReader.ReadAsync();
 
-		int tempVersionId = dbReader.GetInt32(0);
-		string tempVersionName = dbReader.GetString(1);
-		bool tempIsDeluxe = dbReader.GetBoolean(2);
-		DateTime tempLaunchDate = dbReader.GetDateTime(3);
-		DateTime? tempLaunchDateGlobal = null;
-		try
-		{
-			tempLaunchDateGlobal = dbReader.GetDateTime(4);
-		}
-		catch (InvalidCastException)
-		{
-			// do nothing if null
-		}
-		DateTime tempCreationDate = dbReader.GetDateTime(5);
-		DateTime tempLastUpdate = dbReader.GetDateTime(6);
-
-		MaimaiVersionsTableData ret = new MaimaiVersionsTableData()
-		{
-			VersionID = tempVersionId,
-			VersionName = tempVersionName,
-			IsDeluxe = tempIsDeluxe,
-			LaunchDate = tempLaunchDate,
-			LaunchDateGlobal = tempLaunchDateGlobal,
-			CreationDate = tempCreationDate,
-			LastUpdate = tempLastUpdate
-		};
+		MaimaiVersionsTableData ret = GetRowData(dbReader);
 
 		Log.WriteVerbose("maimai_versions: Returned 1 row.");
 		return ret;
@@ -365,5 +315,35 @@ public static class MaimaiVersions
 
 		await using NpgsqlCommand dbCommand = new NpgsqlCommand(query, transaction.Connection, transaction.Transaction);
 		_ = await dbCommand.ExecuteNonQueryAsync();
+	}
+
+	private static MaimaiVersionsTableData GetRowData(NpgsqlDataReader dbReader)
+	{
+		int tempVersionId = dbReader.GetInt32(0);
+		string tempVersionName = dbReader.GetString(1);
+		bool tempIsDeluxe = dbReader.GetBoolean(2);
+		DateTime tempLaunchDate = dbReader.GetDateTime(3);
+		DateTime? tempLaunchDateGlobal = null;
+		try
+		{
+			tempLaunchDateGlobal = dbReader.GetDateTime(4);
+		}
+		catch (InvalidCastException)
+		{
+			// do nothing if null
+		}
+		DateTime tempCreationDate = dbReader.GetDateTime(5);
+		DateTime tempLastUpdate = dbReader.GetDateTime(6);
+
+		return new MaimaiVersionsTableData()
+		{
+			VersionID = tempVersionId,
+			VersionName = tempVersionName,
+			IsDeluxe = tempIsDeluxe,
+			LaunchDate = tempLaunchDate,
+			LaunchDateGlobal = tempLaunchDateGlobal,
+			CreationDate = tempCreationDate,
+			LastUpdate = tempLastUpdate
+		};
 	}
 }

@@ -45,15 +45,7 @@ public static class Users
 		List<UsersTableData> ret = new List<UsersTableData>();
 		while (await dbReader.ReadAsync())
 		{
-			ret.Add(new UsersTableData()
-			{
-				UserID = dbReader.GetInt32(0),
-				DiscordID = dbReader.GetString(1),
-				Username = dbReader.GetString(2),
-				Discriminator = dbReader.GetString(3),
-				CreationDate = dbReader.GetDateTime(4),
-				LastUpdate = dbReader.GetDateTime(5)
-			});
+			ret.Add(GetRowData(dbReader));
 		}
 
 		Log.WriteVerbose($"users: Returned {ret.Count} row{(ret.Count == 1 ? string.Empty : "s")}.");
@@ -98,15 +90,7 @@ public static class Users
 
 		_ = await dbReader.ReadAsync();
 
-		UsersTableData ret = new UsersTableData()
-		{
-			UserID = dbReader.GetInt32(0),
-			DiscordID = dbReader.GetString(1),
-			Username = dbReader.GetString(2),
-			Discriminator = dbReader.GetString(3),
-			CreationDate = dbReader.GetDateTime(4),
-			LastUpdate = dbReader.GetDateTime(5)
-		};
+		UsersTableData ret = GetRowData(dbReader);
 
 		Log.WriteVerbose("users: Returned 1 row.");
 		return ret;
@@ -150,15 +134,7 @@ public static class Users
 
 		_ = await dbReader.ReadAsync();
 
-		UsersTableData ret = new UsersTableData()
-		{
-			UserID = dbReader.GetInt32(0),
-			DiscordID = dbReader.GetString(1),
-			Username = dbReader.GetString(2),
-			Discriminator = dbReader.GetString(3),
-			CreationDate = dbReader.GetDateTime(4),
-			LastUpdate = dbReader.GetDateTime(5)
-		};
+		UsersTableData ret = GetRowData(dbReader);
 
 		Log.WriteVerbose("users: Returned 1 row.");
 		return ret;
@@ -413,5 +389,25 @@ public static class Users
 
 		await using NpgsqlCommand dbCommand = new NpgsqlCommand(query, transaction.Connection, transaction.Transaction);
 		_ = await dbCommand.ExecuteNonQueryAsync();
+	}
+
+	private static UsersTableData GetRowData(NpgsqlDataReader dbReader)
+	{
+		int tempUserID = dbReader.GetInt32(0);
+		string tempDiscordID = dbReader.GetString(1);
+		string tempUsername = dbReader.GetString(2);
+		string tempDiscriminator = dbReader.GetString(3);
+		DateTime tempCreationDate = dbReader.GetDateTime(4);
+		DateTime tempLastUpdate = dbReader.GetDateTime(5);
+
+		return new UsersTableData()
+		{
+			UserID = tempUserID,
+			DiscordID = tempDiscordID,
+			Username = tempUsername,
+			Discriminator = tempDiscriminator,
+			CreationDate = tempCreationDate,
+			LastUpdate = tempLastUpdate
+		};
 	}
 }

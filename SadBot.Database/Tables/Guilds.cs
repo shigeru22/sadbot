@@ -43,14 +43,7 @@ public static class Guilds
 		List<GuildsTableData> ret = new List<GuildsTableData>();
 		while (await dbReader.ReadAsync())
 		{
-			ret.Add(new GuildsTableData()
-			{
-				GuildID = dbReader.GetInt32(0),
-				DiscordID = dbReader.GetString(1),
-				GuildName = dbReader.GetString(2),
-				CreationDate = dbReader.GetDateTime(3),
-				LastUpdate = dbReader.GetDateTime(4)
-			});
+			ret.Add(GetRowData(dbReader));
 		}
 
 		Log.WriteVerbose($"guilds: Returned {ret.Count} row{(ret.Count == 1 ? string.Empty : "s")}.");
@@ -94,14 +87,7 @@ public static class Guilds
 
 		_ = await dbReader.ReadAsync();
 
-		GuildsTableData ret = new GuildsTableData()
-		{
-			GuildID = dbReader.GetInt32(0),
-			DiscordID = dbReader.GetString(1),
-			GuildName = dbReader.GetString(2),
-			CreationDate = dbReader.GetDateTime(3),
-			LastUpdate = dbReader.GetDateTime(4)
-		};
+		GuildsTableData ret = GetRowData(dbReader);
 
 		Log.WriteVerbose("guilds: Returned 1 row.");
 		return ret;
@@ -144,14 +130,7 @@ public static class Guilds
 
 		_ = await dbReader.ReadAsync();
 
-		GuildsTableData ret = new GuildsTableData()
-		{
-			GuildID = dbReader.GetInt32(0),
-			DiscordID = dbReader.GetString(1),
-			GuildName = dbReader.GetString(2),
-			CreationDate = dbReader.GetDateTime(3),
-			LastUpdate = dbReader.GetDateTime(4)
-		};
+		GuildsTableData ret = GetRowData(dbReader);
 
 		Log.WriteVerbose("guilds: Returned 1 row.");
 		return ret;
@@ -399,5 +378,23 @@ public static class Guilds
 
 		await using NpgsqlCommand dbCommand = new NpgsqlCommand(query, transaction.Connection, transaction.Transaction);
 		_ = await dbCommand.ExecuteNonQueryAsync();
+	}
+
+	private static GuildsTableData GetRowData(NpgsqlDataReader dbReader)
+	{
+		int tempGuildID = dbReader.GetInt32(0);
+		string tempDiscordID = dbReader.GetString(1);
+		string tempGuildName = dbReader.GetString(2);
+		DateTime tempCreationDate = dbReader.GetDateTime(3);
+		DateTime tempLastUpdate = dbReader.GetDateTime(4);
+
+		return new GuildsTableData()
+		{
+			GuildID = tempGuildID,
+			DiscordID = tempDiscordID,
+			GuildName = tempGuildName,
+			CreationDate = tempCreationDate,
+			LastUpdate = tempLastUpdate
+		};
 	}
 }
