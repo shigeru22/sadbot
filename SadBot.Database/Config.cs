@@ -6,6 +6,16 @@ using SadBot.Utils;
 
 namespace SadBot.Database;
 
+public enum SSLMode
+{
+	DISABLE,
+	ALLOW,
+	PREFER,
+	REQUIRE,
+	VERIFY_CA,
+	VERIFY_FULL
+}
+
 public class DatabaseConfig
 {
 	public string? Hostname { get; set; }
@@ -14,7 +24,7 @@ public class DatabaseConfig
 	public string? Password { get; set; }
 	public string? DatabaseName { get; set; }
 	public string? CertificatePath { get; set; }
-	public bool UseSSL { get; set; }
+	public SSLMode? UseSSLMode { get; set; }
 
 	public string ToConnectionString()
 	{
@@ -57,18 +67,27 @@ public class DatabaseConfig
 
 		StringBuilder sbRet = new StringBuilder($"Host={Hostname};Port={Port};Database={DatabaseName};Username={Username};Password={Password}");
 
-		if (string.IsNullOrWhiteSpace(CertificatePath) && !UseSSL)
+		if (UseSSLMode != null)
+		{
+			_ = sbRet.Append(UseSSLMode switch
+			{
+				SSLMode.DISABLE => ";SSL Mode=Disable",
+				SSLMode.ALLOW => ";SSL Mode=Allow",
+				SSLMode.PREFER => ";SSL Mode=Prefer",
+				SSLMode.REQUIRE => ";SSL Mode=Require;Trust Server Certificate=true",
+				SSLMode.VERIFY_CA => ";SSL Mode=VerifyCA",
+				SSLMode.VERIFY_FULL => ";SSL Mode=VerifyFull",
+				_ => throw new NotImplementedException("SSL Mode value not implemented.")
+			});
+		}
+
+		if (string.IsNullOrWhiteSpace(CertificatePath) && UseSSLMode == SSLMode.DISABLE)
 		{
 			Log.WriteWarning("Not using SSL for database connection. Caute procedere.");
 		}
-
-		if (!string.IsNullOrWhiteSpace(CertificatePath))
+		else if (!string.IsNullOrWhiteSpace(CertificatePath))
 		{
 			_ = sbRet.Append($";SSL Certificate={CertificatePath}");
-		}
-		else if (!UseSSL)
-		{
-			_ = sbRet.Append(";SSL Mode=Disable");
 		}
 
 		return sbRet.ToString();
