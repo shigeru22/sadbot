@@ -13,3 +13,24 @@ public class EnvironmentVariableAttribute : Attribute
 		EnvironmentKey = environmentKey;
 	}
 }
+
+[AttributeUsage(AttributeTargets.Property | AttributeTargets.Field)]
+public class ArgumentAttribute : Attribute
+{
+	public string? ShortFlag { get; init; }
+	public string? LongFlag { get; init; }
+	public bool HasValue { get; init; }
+
+	public ArgumentAttribute(string shortFlag, bool hasValue = false)
+	{
+		ShortFlag = shortFlag;
+		HasValue = hasValue;
+	}
+
+	public ArgumentAttribute(string? shortFlag, string longFlag, bool hasValue = false)
+	{
+		ShortFlag = shortFlag;
+		LongFlag = longFlag;
+		HasValue = hasValue;
+	}
+}
