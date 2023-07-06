@@ -5,7 +5,7 @@ using System.Reflection;
 
 namespace SadBot.Utils;
 
-public class EnvironmentWrapper
+internal class EnvironmentWrapper
 {
 	private static readonly EnvironmentWrapper instance = new EnvironmentWrapper();
 

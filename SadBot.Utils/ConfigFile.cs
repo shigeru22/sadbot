@@ -6,7 +6,7 @@ using System.Text.Json.Serialization;
 
 namespace SadBot.Utils;
 
-readonly struct ConfigFileContents
+internal readonly struct ConfigFileContents
 {
 	[JsonPropertyName("botToken")] public string BotToken { get; init; }
 	[JsonPropertyName("useReply")] public bool UseReply { get; init; }
@@ -14,13 +14,13 @@ readonly struct ConfigFileContents
 	[JsonPropertyName("database")] public ConfigFileDatabaseContents Database { get; init; }
 }
 
-readonly struct ConfigFileLoggingContents
+internal readonly struct ConfigFileLoggingContents
 {
 	[JsonPropertyName("useUtc")] public bool UseUTC { get; init; }
 	[JsonPropertyName("logSeverity")] public int LogSeverity { get; init; }
 }
 
-readonly struct ConfigFileDatabaseContents
+internal readonly struct ConfigFileDatabaseContents
 {
 	[JsonPropertyName("hostname")] public string Hostname { get; init; }
 	[JsonPropertyName("port")] public int Port { get; init; }
@@ -31,7 +31,7 @@ readonly struct ConfigFileDatabaseContents
 	[JsonPropertyName("sslMode")] public string? UseSSL { get; init; }
 }
 
-public class ConfigFile
+internal class ConfigFile
 {
 	private static readonly ConfigFile instance = new ConfigFile();
 

@@ -5,7 +5,7 @@ using System.Reflection;
 
 namespace SadBot.Utils;
 
-public class ArgumentsWrapper
+internal class ArgumentsWrapper
 {
 	private static readonly ArgumentsWrapper instance = new ArgumentsWrapper();
 
