@@ -16,7 +16,7 @@ public class ArgumentsWrapper
 	[Argument("u", "use-utc")] public bool? UseUTC { get; init; }
 	[Argument("l", "log-severity", true)] public int? LogSeverity { get; init; }
 	[Argument("dh", "db-host", true)] public string? DatabaseHost { get; init; }
-	[Argument("dp", "db-port", true)] public string? DatabasePort { get; init; }
+	[Argument("dp", "db-port", true)] public int? DatabasePort { get; init; }
 	[Argument("du", "db-username", true)] public string? DatabaseUsername { get; init; }
 	[Argument("dp", "db-password", true)] public string? DatabasePassword { get; init; }
 	[Argument("dn", "db-name", true)] public string? DatabaseName { get; init; }

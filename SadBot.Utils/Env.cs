@@ -18,7 +18,7 @@ public class EnvironmentWrapper
 	[EnvironmentVariable($"{ENV_PREFIX}LOG_USE_UTC")] public bool? UseUTC { get; init; }
 	[EnvironmentVariable($"{ENV_PREFIX}LOG_SEVERITY")] public int? LogSeverity { get; init; }
 	[EnvironmentVariable($"{ENV_PREFIX}DB_HOST")] public string? DatabaseHost { get; init; }
-	[EnvironmentVariable($"{ENV_PREFIX}DB_PORT")] public string? DatabasePort { get; init; }
+	[EnvironmentVariable($"{ENV_PREFIX}DB_PORT")] public int? DatabasePort { get; init; }
 	[EnvironmentVariable($"{ENV_PREFIX}DB_USERNAME")] public string? DatabaseUsername { get; init; }
 	[EnvironmentVariable($"{ENV_PREFIX}DB_PASSWORD")] public string? DatabasePassword { get; init; }
 	[EnvironmentVariable($"{ENV_PREFIX}DB_NAME")] public string? DatabaseName { get; init; }
